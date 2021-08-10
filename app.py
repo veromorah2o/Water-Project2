@@ -110,7 +110,7 @@ def update_data():
     # Generate the new curve using the new dataframe
     x, y, df = calculate_z(v, a, time)
     source.data = dict(df)
-
+text.on_change('value', update_title)
 # update data on button press
 bt.on_click(update_data)
 
