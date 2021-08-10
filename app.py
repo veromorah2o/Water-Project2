@@ -5,7 +5,6 @@
 
 
 #import requried libraries and Bokeh functions 
-from numba import njit, prange
 from bokeh.io import output_notebook 
 import numpy as np
 import pandas as pd
