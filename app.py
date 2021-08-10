@@ -5,13 +5,17 @@
 
 
 #import requried libraries and Bokeh functions 
+from numba import njit, prange
 from bokeh.io import output_notebook 
 import numpy as np
+import pandas as pd
 import math 
+import matplotlib.pyplot as plt 
+import matplotlib as mpl
+import scipy.special as s   
 import scipy.integrate as integrate
 from math import pi
-import pandas as pd
-from bokeh.io import output_file, show, curdoc
+from bokeh.io import output_file, show
 from bokeh.models import BasicTicker, ColorBar, LinearColorMapper, ColumnDataSource, PrintfTickFormatter
 from bokeh.plotting import figure
 from bokeh.transform import transform
@@ -19,30 +23,39 @@ from bokeh.application import Application
 from bokeh.application.handlers import FunctionHandler
 from bokeh.palettes import Viridis256
 import sys
+np.set_printoptions(threshold=np.inf)
+pd.options.display.max_seq_items = 2000
+
+import timeit
+start = timeit.timeit()
 import bokeh.plotting.figure as bk_figure
+from bokeh.io import curdoc, show
 from bokeh.layouts import row, widgetbox
 from bokeh.models import ColumnDataSource
 from bokeh.models.widgets import Slider, TextInput
 
 from bokeh.application import Application
 from bokeh.application.handlers import FunctionHandler
-
+output_file('2D_Bokeh.html')
+output_notebook()
 # Set initial data
 v= 2.55
 a = 0.1 
 time = 20
 
 # calculate the Z data values and return a dataframe
+
 def calculate_z(v, a, time):
     x = np.linspace(2,10000,100)
     y = np.linspace(-2000,2000,100)
     C = np.zeros([len(x),len(y)])
-    for i in range(0,len(x)):
-        for j in range(0,len(y)):
-            b = 20
-            t = time*365
-            DL = v*0.83*(math.log10(x[i]))**2.414
-            Dt = a * DL
+    
+    b = 20
+    t = time*365 
+    for i in range(0, len(x)):
+        DL = (v*0.83*(math.log10(x[i]))**2.414)
+        Dt = a * DL
+        for j in range(0, len(y)):
             def f(r):
                 return math.exp((-((x[i]-(v*r))**2)/(4*DL*r))-(((y[j])**2)/(4*Dt*r)))*(1/r)
             results,err = integrate.quad(f,0,t)
@@ -99,14 +112,18 @@ def update_data(attrname, old, new):
     source.data = dict(df)
 for w in [vv, tt, aa]:
     w.on_change('value', update_data)
-# Trigger callback to change title
-text.on_change('value', update_title)
+
 
 # Set up layouts and add to document
 inputs = widgetbox(text, vv, tt, aa)
 layout = row(p,widgetbox(text, vv, tt, aa))
 
-
 curdoc().add_root(layout)
 curdoc().title = "Concentration Signals"
+
+
+# In[ ]:
+
+
+
 
