@@ -5,7 +5,9 @@
 
 
 #import requried libraries and Bokeh functions 
-from bokeh.io import output_notebook 
+from bokeh.models import Button, CustomJS
+from bokeh.io import curdoc
+from bokeh.io import output_notebook
 import numpy as np
 import pandas as pd
 import math 
@@ -39,7 +41,8 @@ output_notebook()
 v= 2.55
 a = 0.1 
 time = 20
-
+bt = Button(label='Generate Plot')
+back_bt = Button(label='Go Back')
 # calculate the Z data values and return a dataframe
 
 def calculate_z(v, a, time):
@@ -97,7 +100,7 @@ aa = Slider(title="Dispersion Factor", value=0.1, start=0.05, end=0.2,step=0.05)
 def update_title(attrname, old, new):
     p.title.text = text.value
 
-def update_data(attrname, old, new):
+def update_data():
     # Get the current slider values
     v = vv.value
     time = tt.value
@@ -107,13 +110,16 @@ def update_data(attrname, old, new):
     # Generate the new curve using the new dataframe
     x, y, df = calculate_z(v, a, time)
     source.data = dict(df)
-for w in [vv, tt, aa]:
-    w.on_change('value', update_data)
 
+# update data on button press
+bt.on_click(update_data)
+
+# javascript go back
+back_bt.js_on_click(CustomJS(code="window.history.back()"))
 
 # Set up layouts and add to document
-inputs = widgetbox(text, vv, tt, aa)
-layout = row(p,widgetbox(text, vv, tt, aa))
+inputs = widgetbox(text, vv, tt, aa,bt, back_bt)
+layout = row(p,widgetbox(text, vv, tt, aa,bt, back_bt))
 
 curdoc().add_root(layout)
 curdoc().title = "Concentration Signals"
