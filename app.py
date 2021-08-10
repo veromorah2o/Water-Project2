@@ -9,8 +9,6 @@ from bokeh.io import output_notebook
 import numpy as np
 import pandas as pd
 import math 
-import matplotlib.pyplot as plt 
-import matplotlib as mpl
 import scipy.special as s   
 import scipy.integrate as integrate
 from math import pi
