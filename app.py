@@ -42,7 +42,7 @@ v= 2.55
 a = 0.1 
 time = 20
 bt = Button(label='Generate Plot')
-back_bt = Button(label='Go Back')
+
 # calculate the Z data values and return a dataframe
 
 def calculate_z(v, a, time):
@@ -114,12 +114,10 @@ text.on_change('value', update_title)
 # update data on button press
 bt.on_click(update_data)
 
-# javascript go back
-back_bt.js_on_click(CustomJS(code="window.history.back()"))
 
 # Set up layouts and add to document
-inputs = widgetbox(text, vv, tt, aa,bt, back_bt)
-layout = row(p,widgetbox(text, vv, tt, aa,bt, back_bt))
+inputs = widgetbox(text, vv, tt, aa,bt)
+layout = row(p,widgetbox(text, vv, tt, aa,bt))
 
 curdoc().add_root(layout)
 curdoc().title = "Concentration Signals"
